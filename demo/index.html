@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glimpse — Visual AI for Developers</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg: #fff;
+      --bg-secondary: #f6f9fc;
+      --bg-dark: #0a2540;
+      --text: #0a2540;
+      --text-muted: #425466;
+      --accent: #635bff;
+      --accent-hover: #524ddb;
+      --card-bg: #f6f9fc;
+      --border: rgba(10,37,64,0.08);
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-3: linear-gradient(135deg, #635bff 0%, #00d4ff 100%);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      background: rgba(255,255,255,0.85);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: var(--gradient-3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav .nav-links { display: flex; gap: 32px; list-style: none; }
+    nav .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav .nav-links a:hover { color: var(--text); }
+    nav .nav-cta {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    nav .nav-cta:hover { background: var(--accent-hover); }
+
+    /* ─── HERO (Stripe style) ─── */
+    .hero-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -350px;
+      right: -150px;
+      width: 1400px;
+      height: 1200px;
+      background: conic-gradient(from 180deg at 50% 35%,
+        #a855f7 0deg,
+        #ec4899 45deg,
+        #f97316 90deg,
+        #facc15 130deg,
+        #a3e635 160deg,
+        #34d399 195deg,
+        #22d3ee 230deg,
+        #818cf8 270deg,
+        #a855f7 360deg);
+      filter: blur(60px);
+      opacity: 0.55;
+      pointer-events: none;
+      border-radius: 30%;
+      transform: rotate(-20deg);
+    }
+    .hero-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 50px;
+      right: 0;
+      width: 800px;
+      height: 800px;
+      background: conic-gradient(from 90deg at 60% 40%,
+        #f472b6 0deg,
+        #c084fc 60deg,
+        #818cf8 120deg,
+        #38bdf8 180deg,
+        #a78bfa 240deg,
+        #f472b6 360deg);
+      filter: blur(80px);
+      opacity: 0.35;
+      pointer-events: none;
+      border-radius: 50%;
+    }
+    .hero {
+      padding: 140px 24px 80px;
+      text-align: left;
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 15px;
+      font-weight: 500;
+      color: #635bff;
+      margin-bottom: 24px;
+      letter-spacing: 0.3px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 40px;
+      max-width: 800px;
+      color: #0a2540;
+      -webkit-text-fill-color: unset;
+      background: none;
+    }
+    .hero h1 .text-gradient {
+      color: #635bff;
+    }
+    .hero p {
+      font-size: clamp(17px, 2vw, 21px);
+      color: #425466;
+      max-width: 600px;
+      margin: 0 0 40px;
+      line-height: 1.6;
+    }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: #635bff;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 980px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { background: #524ddb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,91,255,0.4); }
+    .btn-primary .arrow { font-size: 18px; transition: transform 0.2s; }
+    .btn-primary:hover .arrow { transform: translateX(3px); }
+    .btn-secondary {
+      background: transparent;
+      color: #0a2540;
+      border: 1.5px solid #e3e8ee;
+      padding: 14px 32px;
+      border-radius: 980px;
+      font-size: 17px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-secondary:hover { border-color: #0a2540; background: rgba(10,37,64,0.04); }
+
+    /* ─── CODE PREVIEW ─── */
+    .code-preview {
+      max-width: 720px;
+      margin: 60px 0 0;
+      background: #0a2540;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      text-align: left;
+    }
+    .code-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .code-dot.red { background: #ff5f57; }
+    .code-dot.yellow { background: #febc2e; }
+    .code-dot.green { background: #28c840; }
+    .code-body {
+      padding: 24px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #8d9bae;
+      overflow-x: auto;
+    }
+    .code-body .kw { color: #ff7ab2; }
+    .code-body .fn { color: #67b7ff; }
+    .code-body .str { color: #ff8170; }
+    .code-body .cmt { color: #6c7986; }
+
+    /* ─── TRUSTED BY ─── */
+    .trusted-by {
+      padding: 60px 0;
+      text-align: center;
+      overflow: hidden;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .trusted-by p {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+    .marquee-row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 24px;
+      width: max-content;
+      padding: 8px 0;
+    }
+    .marquee-row.left  { animation: marquee-left  25s linear infinite; }
+    .marquee-row.right { animation: marquee-right 30s linear infinite; }
+    .marquee-row.slow  { animation: marquee-left  40s linear infinite; }
+    .marquee-row:hover { animation-play-state: paused; }
+    @keyframes marquee-left  { to { transform: translateX(-50%); } }
+    @keyframes marquee-right { to { transform: translateX(50%); } }
+    .marquee-row.right { transform: translateX(-50%); }
+    .marquee-item {
+      flex-shrink: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(10,37,64,0.4);
+      padding: 10px 28px;
+      border: 1px solid rgba(10,37,64,0.1);
+      border-radius: 980px;
+      white-space: nowrap;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .marquee-item:hover {
+      color: rgba(10,37,64,0.8);
+      border-color: rgba(10,37,64,0.25);
+    }
+
+    /* ─── FEATURES ─── */
+    .features {
+      padding: 120px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .features-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    .features-header h2 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+    .features-header p {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 32px;
+      transition: transform 0.3s, border-color 0.3s, background-image 0.3s;
+      background-clip: padding-box;
+      position: relative;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 21px;
+      padding: 1px;
+      background: transparent;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      transition: background 0.3s;
+      pointer-events: none;
+    }
+    .feature-card:hover::before {
+      background: linear-gradient(135deg, #667eea, #f093fb, #4facfe);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: transparent;
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2);
+    }
+    .feature-card:nth-child(1) .feature-icon { background: rgba(102,126,234,0.12); color: #667eea; }
+    .feature-card:nth-child(2) .feature-icon { background: rgba(240,147,251,0.12); color: #d946ef; }
+    .feature-card:nth-child(3) .feature-icon { background: rgba(79,172,254,0.12); color: #3b82f6; }
+    .feature-card:nth-child(4) .feature-icon { background: rgba(67,233,123,0.12); color: #22c55e; }
+    .feature-card:nth-child(5) .feature-icon { background: rgba(253,203,110,0.12); color: #f59e0b; }
+    .feature-card:nth-child(6) .feature-icon { background: rgba(168,85,247,0.12); color: #a855f7; }
+    .feature-card h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+    .feature-card p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── BENTO ─── */
+    .bento {
+      padding: 0 24px 120px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 20px;
+    }
+    .bento-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bento-card.wide { grid-column: span 2; }
+    .bento-card h3 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .bento-card p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .bento-stat {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -3px;
+      margin-top: 24px;
+    }
+    .bento-stat.gradient-1 { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .bento-stat.gradient-2 { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .bento-stat.gradient-3 { background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* ─── PRICING ─── */
+    .pricing {
+      padding: 120px 24px;
+      background: var(--bg);
+    }
+    .pricing-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .pricing-header h2 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+    .pricing-header p {
+      font-size: 19px;
+      color: var(--text-muted);
+    }
+
+    /* ─── BILLING TOGGLE ─── */
+    .billing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+    .billing-toggle span {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+    .billing-toggle span.active { color: var(--text); }
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      background: #e3e8ee;
+      border-radius: 13px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.3s;
+      padding: 0;
+    }
+    .toggle-switch.active { background: var(--accent); }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle-switch.active::after { transform: translateX(22px); }
+    .billing-save {
+      font-size: 12px;
+      font-weight: 600;
+      color: #22c55e;
+      background: rgba(34,197,94,0.1);
+      padding: 4px 10px;
+      border-radius: 980px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── PRICING GRID ─── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      max-width: 1000px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .pricing-card {
+      padding: 40px 32px;
+      text-align: left;
+      transition: background 0.3s;
+      position: relative;
+    }
+    .pricing-card + .pricing-card {
+      border-left: 1px solid var(--border);
+    }
+    .pricing-card:hover {
+      background: var(--bg-secondary);
+    }
+    .pricing-card.featured {
+      background: var(--bg-secondary);
+      position: relative;
+    }
+    .pricing-card.featured::before {
+      content: 'Popular';
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 980px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .pricing-tier {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
+    }
+    .pricing-price {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-bottom: 4px;
+      line-height: 1;
+      color: var(--text);
+    }
+    .pricing-price span { font-size: 16px; color: var(--text-muted); font-weight: 400; letter-spacing: 0; }
+    .pricing-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+    .pricing-features li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pricing-features li::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23635bff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat center;
+    }
+    .pricing-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+    }
+    .pricing-btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+    .pricing-btn.primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99,91,255,0.3); }
+    .pricing-btn.outline {
+      background: #fff;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+    }
+    .pricing-btn.outline:hover { border-color: var(--text); background: var(--bg-secondary); }
+
+    /* ─── CONTACT FORM ─── */
+    .contact {
+      padding: 120px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 60px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    }
+    .contact-left {
+      position: sticky;
+      top: 100px;
+    }
+    .contact-left h2 {
+      font-size: clamp(40px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .contact-left h2 .gradient-text {
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #f5576c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .contact-left > p {
+      font-size: 17px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .contact-perks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .contact-perk {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+    .contact-perk .perk-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .contact-perk:nth-child(1) .perk-icon { background: rgba(102,126,234,0.15); }
+    .contact-perk:nth-child(2) .perk-icon { background: rgba(240,147,251,0.15); }
+    .contact-perk:nth-child(3) .perk-icon { background: rgba(79,172,254,0.15); }
+
+    /* form card */
+    .contact-card {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #667eea, #f093fb, #f5576c, transparent);
+      border-radius: 2px;
+    }
+    .contact-card-glow {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .contact-card-glow.g1 { top: -80px; right: -60px; background: #667eea; }
+    .contact-card-glow.g2 { bottom: -80px; left: -60px; background: #f5576c; }
+
+    .contact-card form { position: relative; z-index: 1; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-wrapper .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: rgba(10,37,64,0.3);
+      pointer-events: none;
+      transition: color 0.3s;
+    }
+    .input-wrapper textarea ~ .input-icon {
+      top: 18px;
+      transform: none;
+    }
+    .input-wrapper:focus-within .input-icon {
+      color: #667eea;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 15px 16px 15px 46px;
+      background: #f6f9fc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(10,37,64,0.3);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(99,91,255,0.5);
+      box-shadow: 0 0 0 3px rgba(99,91,255,0.1);
+      background: #fff;
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-group select { appearance: none; cursor: pointer; }
+    .form-group select option { background: #fff; color: var(--text); }
+
+    .form-submit {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.3px;
+    }
+    .form-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .form-submit:hover::before { opacity: 1; }
+    .form-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(102,126,234,0.35); }
+    .form-submit span { position: relative; z-index: 1; }
+
+    .form-hint {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    @keyframes successIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(12px); }
+      60% { transform: scale(1.02) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes checkPop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 48px 32px;
+      background: rgba(102,126,234,0.06);
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .form-success.visible {
+      display: block;
+      animation: successIn 0.5s ease-out forwards;
+    }
+    .form-success .success-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      margin-bottom: 20px;
+      animation: checkPop 0.4s ease-out 0.2s both;
+    }
+    .form-success h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .form-success p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 60px 24px 40px;
+      border-top: none;
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,91,255,0.3), rgba(240,147,251,0.3), rgba(99,91,255,0.3), transparent);
+    }
+    footer .footer-socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    footer .footer-socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    footer .footer-socials a:hover {
+      background: rgba(99,91,255,0.1);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    footer .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+    }
+    footer .footer-brand .logo {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: var(--gradient-3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    footer .footer-brand p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 280px;
+    }
+    footer h4 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 10px; }
+    footer ul a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    footer ul a:hover { color: var(--text); }
+    footer .footer-bottom {
+      max-width: 1200px;
+      margin: 40px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer .footer-bottom p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-child > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal-child.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-child.visible > *:nth-child(1)  { transition-delay: 0s; }
+    .reveal-child.visible > *:nth-child(2)  { transition-delay: 0.07s; }
+    .reveal-child.visible > *:nth-child(3)  { transition-delay: 0.14s; }
+    .reveal-child.visible > *:nth-child(4)  { transition-delay: 0.21s; }
+    .reveal-child.visible > *:nth-child(5)  { transition-delay: 0.28s; }
+    .reveal-child.visible > *:nth-child(6)  { transition-delay: 0.35s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-card + .pricing-card { border-left: none; border-top: 1px solid var(--border); }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-card.wide { grid-column: span 1; }
+      footer .footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .hero { padding: 120px 24px 80px; }
+    }
+    @media (hover: none) {
+      .feature-card::before { display: none; }
+      .feature-card:hover { transform: none; border-color: var(--border); }
+      .feature-card:hover .feature-icon { transform: none; }
+      .pricing-card:hover { background: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav data-testid="nav">
+    <div class="nav-inner">
+      <div class="logo">Glimpse</div>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="/docs">Docs</a></li>
+      </ul>
+      <button class="nav-cta" id="nav-cta">Get Started</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-wrapper">
+  <section class="hero" data-testid="hero">
+    <div class="hero-eyebrow">Introducing Glimpse MCP</div>
+    <h1>Visual infrastructure to <span class="text-gradient">power your AI agents.</span> Screenshots, diffs, and interactions — from your first prototype to production.</h1>
+    <div class="hero-buttons">
+      <button class="btn-primary" id="get-started">Get started <span class="arrow">&#8250;</span></button>
+      <button class="btn-secondary" id="watch-demo">Watch Demo</button>
+    </div>
+
+    <div class="code-preview" data-testid="code-preview">
+      <div class="code-header">
+        <span class="code-dot red"></span>
+        <span class="code-dot yellow"></span>
+        <span class="code-dot green"></span>
+      </div>
+      <div class="code-body">
+        <span class="cmt">// One command to install</span><br>
+        <span class="kw">$</span> npx <span class="fn">glimpse-mcp</span><br><br>
+        <span class="cmt">// Your AI agent can now see the frontend</span><br>
+        <span class="fn">screenshot</span>({ <span class="str">selector</span>: <span class="str">".hero"</span> })<br>
+        <span class="fn">smart_diff</span>({ <span class="str">action</span>: <span class="str">"compare"</span> })<br>
+        <span class="fn">interact</span>({ <span class="str">action</span>: <span class="str">"click"</span>, <span class="str">selector</span>: <span class="str">".btn"</span> })
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- TRUSTED BY -->
+  <section class="trusted-by reveal" data-testid="trusted-by">
+    <p>Trusted by teams at</p>
+    <!-- Row 1 — left -->
+    <div class="marquee-row left">
+      <span class="marquee-item">Vercel</span><span class="marquee-item">Stripe</span><span class="marquee-item">Shopify</span><span class="marquee-item">Linear</span><span class="marquee-item">Notion</span><span class="marquee-item">Figma</span><span class="marquee-item">GitHub</span><span class="marquee-item">Datadog</span><span class="marquee-item">Supabase</span><span class="marquee-item">Clerk</span>
+      <span class="marquee-item" aria-hidden="true">Vercel</span><span class="marquee-item" aria-hidden="true">Stripe</span><span class="marquee-item" aria-hidden="true">Shopify</span><span class="marquee-item" aria-hidden="true">Linear</span><span class="marquee-item" aria-hidden="true">Notion</span><span class="marquee-item" aria-hidden="true">Figma</span><span class="marquee-item" aria-hidden="true">GitHub</span><span class="marquee-item" aria-hidden="true">Datadog</span><span class="marquee-item" aria-hidden="true">Supabase</span><span class="marquee-item" aria-hidden="true">Clerk</span>
+    </div>
+    <!-- Row 2 — right -->
+    <div class="marquee-row right">
+      <span class="marquee-item">PostHog</span><span class="marquee-item">Resend</span><span class="marquee-item">Railway</span><span class="marquee-item">Planetscale</span><span class="marquee-item">Neon</span><span class="marquee-item">Turso</span><span class="marquee-item">Render</span><span class="marquee-item">Fly.io</span><span class="marquee-item">Prisma</span><span class="marquee-item">Liveblocks</span>
+      <span class="marquee-item" aria-hidden="true">PostHog</span><span class="marquee-item" aria-hidden="true">Resend</span><span class="marquee-item" aria-hidden="true">Railway</span><span class="marquee-item" aria-hidden="true">Planetscale</span><span class="marquee-item" aria-hidden="true">Neon</span><span class="marquee-item" aria-hidden="true">Turso</span><span class="marquee-item" aria-hidden="true">Render</span><span class="marquee-item" aria-hidden="true">Fly.io</span><span class="marquee-item" aria-hidden="true">Prisma</span><span class="marquee-item" aria-hidden="true">Liveblocks</span>
+    </div>
+    <!-- Row 3 — left slow -->
+    <div class="marquee-row slow">
+      <span class="marquee-item">Sentry</span><span class="marquee-item">Cloudflare</span><span class="marquee-item">Retool</span><span class="marquee-item">Sanity</span><span class="marquee-item">Contentful</span><span class="marquee-item">Algolia</span><span class="marquee-item">Twilio</span><span class="marquee-item">LaunchDarkly</span><span class="marquee-item">Stytch</span><span class="marquee-item">Deno</span>
+      <span class="marquee-item" aria-hidden="true">Sentry</span><span class="marquee-item" aria-hidden="true">Cloudflare</span><span class="marquee-item" aria-hidden="true">Retool</span><span class="marquee-item" aria-hidden="true">Sanity</span><span class="marquee-item" aria-hidden="true">Contentful</span><span class="marquee-item" aria-hidden="true">Algolia</span><span class="marquee-item" aria-hidden="true">Twilio</span><span class="marquee-item" aria-hidden="true">LaunchDarkly</span><span class="marquee-item" aria-hidden="true">Stytch</span><span class="marquee-item" aria-hidden="true">Deno</span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features" data-testid="features">
+    <div class="features-header reveal">
+      <h2>Everything you need</h2>
+      <p>8 powerful tools that give AI agents complete visual understanding of your frontend.</p>
+    </div>
+    <div class="features-grid reveal-child">
+      <div class="feature-card" data-testid="feature-screenshot">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3>Screenshots</h3>
+        <p>Capture any page, element, or responsive viewport. Full-page scrolling included.</p>
+      </div>
+      <div class="feature-card" data-testid="feature-diff">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"/><line x1="12" y1="2" x2="12" y2="22"/><path d="M7 8h2M7 12h2M15 10l2 2-2 2M15 16h2"/></svg></div>
+        <h3>Smart Diffs</h3>
+        <p>Know exactly what changed — which elements moved, resized, or got new styles.</p>
+      </div>
+      <div class="feature-card" data-testid="feature-inspect">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg></div>
+        <h3>DOM Inspection</h3>
+        <p>Get computed styles, bounding boxes, attributes — everything about any element.</p>
+      </div>
+      <div class="feature-card" data-testid="feature-interact">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/><path d="M12 3v12"/><path d="M5 21h14"/><circle cx="12" cy="3" r="1" fill="currentColor"/></svg></div>
+        <h3>Interactions</h3>
+        <p>Click, type, scroll, hover, select. Test UI states and user flows programmatically.</p>
+      </div>
+      <div class="feature-card" data-testid="feature-console">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="3"/><polyline points="7 10 10 13 7 16"/><line x1="13" y1="16" x2="17" y2="16"/></svg></div>
+        <h3>Console Logs</h3>
+        <p>Catch JavaScript errors, warnings, and uncaught exceptions instantly.</p>
+      </div>
+      <div class="feature-card" data-testid="feature-responsive">
+        <div class="feature-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+        <h3>Responsive</h3>
+        <p>Check mobile, tablet, and desktop in one call. Auto-detects your dev server.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENTO -->
+  <section class="bento" data-testid="bento">
+    <div class="bento-grid reveal-child">
+      <div class="bento-card wide">
+        <h3>Faster iteration cycles</h3>
+        <p>AI agents see changes instantly. No more guessing if the CSS is right.</p>
+        <div class="bento-stat gradient-1">10x</div>
+      </div>
+      <div class="bento-card">
+        <h3>Tools included</h3>
+        <p>Everything from screenshots to user flow testing.</p>
+        <div class="bento-stat gradient-2">8</div>
+      </div>
+      <div class="bento-card">
+        <h3>Zero config</h3>
+        <p>Auto-detects dev server, viewport, and browser.</p>
+        <div class="bento-stat gradient-3">0</div>
+      </div>
+      <div class="bento-card wide">
+        <h3>Works with every framework</h3>
+        <p>React, Vue, Svelte, Angular, Next.js, Astro — if it runs on localhost, Glimpse sees it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing" data-testid="pricing">
+    <div class="pricing-inner">
+      <div class="pricing-header reveal">
+        <h2>Simple pricing</h2>
+        <p>Start free, scale when you need to.</p>
+      </div>
+      <div class="billing-toggle reveal">
+        <span class="active" data-billing="monthly">Monthly</span>
+        <button class="toggle-switch" id="billing-toggle" aria-label="Toggle annual billing"></button>
+        <span data-billing="annual">Annual</span>
+        <span class="billing-save">Save 20%</span>
+      </div>
+      <div class="pricing-grid reveal-child">
+        <div class="pricing-card" data-testid="pricing-free">
+          <div class="pricing-tier">Free</div>
+          <div class="pricing-price">$0<span>/mo</span></div>
+          <div class="pricing-desc">For individual developers getting started.</div>
+          <ul class="pricing-features">
+            <li>All 8 MCP tools</li>
+            <li>Chromium browser</li>
+            <li>Community support</li>
+            <li>Open source</li>
+          </ul>
+          <button class="pricing-btn outline" id="plan-free">Get started</button>
+        </div>
+        <div class="pricing-card featured" data-testid="pricing-pro">
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price" data-monthly="$19" data-annual="$15">$19<span>/mo</span></div>
+          <div class="pricing-desc">For teams that ship fast and need more power.</div>
+          <ul class="pricing-features">
+            <li>Everything in Free, plus:</li>
+            <li>Multi-browser testing</li>
+            <li>CI/CD integration</li>
+            <li>Priority support</li>
+            <li>Team dashboard</li>
+          </ul>
+          <button class="pricing-btn primary" id="plan-pro">Start free trial</button>
+        </div>
+        <div class="pricing-card" data-testid="pricing-enterprise">
+          <div class="pricing-tier">Enterprise</div>
+          <div class="pricing-price">Custom</div>
+          <div class="pricing-desc">For large organizations with custom needs.</div>
+          <ul class="pricing-features">
+            <li>Everything in Pro, plus:</li>
+            <li>SSO & SAML</li>
+            <li>Dedicated account manager</li>
+            <li>Custom SLA</li>
+            <li>On-premise deployment</li>
+          </ul>
+          <button class="pricing-btn outline" id="plan-enterprise">Contact sales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact" data-testid="contact">
+    <div class="contact-grid">
+      <!-- Left side — headline + perks -->
+      <div class="contact-left reveal">
+        <h2>Let's<br><span class="gradient-text">build together</span></h2>
+        <p>Got an idea, a question, or just want to say hi? Drop us a line and we'll get back to you faster than you'd expect.</p>
+        <div class="contact-perks">
+          <div class="contact-perk">
+            <div class="perk-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <span>Reply within 24 hours</span>
+          </div>
+          <div class="contact-perk">
+            <div class="perk-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <span>Free onboarding session included</span>
+          </div>
+          <div class="contact-perk">
+            <div class="perk-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <span>No commitment, cancel anytime</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right side — glass card form -->
+      <div class="contact-card reveal">
+        <div class="contact-card-glow g1"></div>
+        <div class="contact-card-glow g2"></div>
+        <form id="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <input type="text" id="name" placeholder="Jane Smith">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                <input type="email" id="email" placeholder="you@company.com">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plan">Interested in</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg></span>
+              <select id="plan">
+                <option value="free">Free Plan — for individuals</option>
+                <option value="pro">Pro Plan — for growing teams</option>
+                <option value="enterprise">Enterprise — custom solutions</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <div class="input-wrapper">
+              <textarea id="message" placeholder="Tell us what you're building..."></textarea>
+              <span class="input-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+            </div>
+          </div>
+          <button type="submit" class="form-submit" id="submit-form"><span>Send Message &#10148;</span></button>
+          <p class="form-hint">We respect your privacy. No spam, ever.</p>
+        </form>
+        <div class="form-success" id="form-success">
+          <div class="success-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h3>You're all set!</h3>
+          <p>Thanks for reaching out — we'll get back to you within 24 hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer data-testid="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">Glimpse</div>
+        <p>Visual feedback for AI coding agents. See what you build, before you ship.</p>
+        <div class="footer-socials">
+          <a href="/github" title="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+          <a href="/twitter" title="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="/discord" title="Discord"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="/changelog">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Developers</h4>
+        <ul>
+          <li><a href="/docs">Documentation</a></li>
+          <li><a href="/api">API Reference</a></li>
+          <li><a href="/github">GitHub</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Glimpse. All rights reserved.</p>
+      <p>Made with care for developers.</p>
+    </div>
+  </footer>
+
+  <script>
+    console.log('Glimpse demo loaded');
+    console.log('Page ready in', Math.round(performance.now()), 'ms');
+
+    // Form submission
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('form-success').classList.add('visible');
+      console.log('Form submitted:', {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        plan: document.getElementById('plan').value,
+      });
+    });
+
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+    // Billing toggle
+    const billingToggle = document.getElementById('billing-toggle');
+    const monthlyLabel = document.querySelector('[data-billing="monthly"]');
+    const annualLabel = document.querySelector('[data-billing="annual"]');
+    const proPrice = document.querySelector('[data-testid="pricing-pro"] .pricing-price');
+    billingToggle.addEventListener('click', () => {
+      const isAnnual = billingToggle.classList.toggle('active');
+      monthlyLabel.classList.toggle('active', !isAnnual);
+      annualLabel.classList.toggle('active', isAnnual);
+      if (proPrice) {
+        const price = isAnnual ? proPrice.dataset.annual : proPrice.dataset.monthly;
+        proPrice.innerHTML = price + '<span>/mo</span>';
+      }
+    });
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal, .reveal-child').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
