@@ -1,0 +1,50 @@
+{
+  "name": "glimpse-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that gives AI coding agents visual access to frontend via screenshots, diffs, DOM inspection and console logs",
+  "type": "module",
+  "bin": {
+    "glimpse-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "AGENT_GUIDE.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepack": "npm run build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "mcp",
+    "screenshots",
+    "visual-testing",
+    "playwright",
+    "ai-coding",
+    "frontend",
+    "cursor",
+    "claude-code"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.28.0",
+    "axe-core": "^4.11.1",
+    "pixelmatch": "^7.1.0",
+    "playwright": "^1.58.2",
+    "pngjs": "^7.0.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/pngjs": "^6.0.5",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1"
+  }
+}
