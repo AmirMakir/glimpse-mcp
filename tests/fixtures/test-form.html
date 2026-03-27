@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 0; font-family: sans-serif; padding: 20px; }
+    form { max-width: 400px; }
+    input, select, button { display: block; margin: 10px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+    button { cursor: pointer; background: #2563eb; color: white; border: none; border-radius: 4px; }
+    #result { display: none; margin-top: 20px; padding: 16px; background: #d1fae5; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Login Form</h1>
+  <form id="login">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <select id="role">
+      <option value="user">User</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button type="submit" id="submit">Login</button>
+  </form>
+  <div id="result">Logged in!</div>
+  <script>
+    document.getElementById('login').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('result').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

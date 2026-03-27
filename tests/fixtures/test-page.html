@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    .header { background: green; color: white; padding: 50px; }
+    .card { width: 400px; padding: 16px; margin: 20px; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .card-title { font-size: 18px; font-weight: bold; }
+    .hidden { display: none; }
+    .hero { padding: 40px 20px; }
+    .features { padding: 40px 20px; background: #f9fafb; }
+    footer { padding: 20px; background: #1f2937; color: white; }
+  </style>
+</head>
+<body>
+  <header data-testid="header" class="header">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <h1>Test Page</h1>
+  </header>
+  <section class="hero" id="hero">
+    <h2>Welcome to the Hero</h2>
+    <p>Hero content goes here.</p>
+  </section>
+  <section class="features">
+    <h2>Features</h2>
+    <div class="card" data-testid="card">
+      <div class="card-title">Card Title</div>
+      <p>Card content goes here.</p>
+    </div>
+  </section>
+  <footer>
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </footer>
+  <div class="hidden">Should not appear</div>
+  <script>
+    console.log("Page loaded");
+    console.warn("Test warning");
+  </script>
+</body>
+</html>
