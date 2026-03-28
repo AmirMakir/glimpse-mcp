@@ -56,7 +56,7 @@ export async function handleFlow(
       switch (step.action) {
         case 'navigate':
           if (step.url) {
-            await page.goto(step.url, { timeout: 15000, waitUntil: 'load' });
+            await page.goto(step.url, { timeout: 45000, waitUntil: 'load' });
             await page.waitForLoadState('networkidle').catch(() => {});
           }
           break;

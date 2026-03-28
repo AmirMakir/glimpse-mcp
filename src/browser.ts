@@ -39,7 +39,7 @@ export class BrowserManager {
       this.setupConsoleCapture(this.page);
       this.currentViewport = viewport;
 
-      await this.page.goto(url, { timeout: 15000, waitUntil: 'load' });
+      await this.page.goto(url, { timeout: 45000, waitUntil: 'load' });
       this.currentUrl = url;
 
       await this.waitForNetworkIdle();
@@ -55,7 +55,7 @@ export class BrowserManager {
 
     // Navigate if URL changed or reload requested
     if (this.currentUrl !== url || reload) {
-      await this.page.goto(url, { timeout: 15000, waitUntil: 'load' });
+      await this.page.goto(url, { timeout: 45000, waitUntil: 'load' });
       this.currentUrl = url;
       await this.waitForNetworkIdle();
     }
